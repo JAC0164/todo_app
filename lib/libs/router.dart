@@ -13,10 +13,6 @@ GoRouter appRouter(AuthData? authState) {
         return '/infos';
       }
 
-      if (authState?.loading == true) {
-        return '/splash';
-      }
-
       if (authState?.user == null) {
         return '/auth';
       }

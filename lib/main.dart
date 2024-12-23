@@ -7,13 +7,18 @@ import 'package:todo_app/libs/shared_preferences.dart';
 import 'package:todo_app/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/services/todo_service.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   // Initialize Firebase
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Flutter Native Splash
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(const ProviderScope(
     child: MyApp(),
@@ -50,6 +55,7 @@ class MyApp extends ConsumerWidget {
 
       // Update loading
       if (authState.loading) authService.setLoading(false);
+      FlutterNativeSplash.remove();
     });
 
     return MaterialApp.router(
