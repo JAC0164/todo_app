@@ -7,8 +7,9 @@ import 'package:todo_app/widgets/custom_text_field.dart';
 
 class TodoScreen extends StatefulWidget {
   final List<TodoModel> todos;
+  final bool loading;
 
-  const TodoScreen({super.key, required this.todos});
+  const TodoScreen({super.key, required this.todos, required this.loading});
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
@@ -60,6 +61,7 @@ class _TodoScreenState extends State<TodoScreen> {
               todos: widget.todos,
               search: _search,
               filters: _selectedFilter,
+              loading: widget.loading,
             ),
           ),
         ],

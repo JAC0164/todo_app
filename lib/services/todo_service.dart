@@ -24,7 +24,12 @@ class TodoService extends StateNotifier<TodoData> {
         return TodoModel.fromJson(data, id: doc.id);
       }).toList();
 
-      state = state.copyWith(todos: data, categories: state.categories);
+      state = state.copyWith(
+        todos: data,
+        loadingTodos: false,
+        categories: state.categories,
+        loadingCategories: state.loadingCategories,
+      );
 
       return data;
     } on FirebaseException catch (_) {
@@ -147,7 +152,12 @@ class TodoService extends StateNotifier<TodoData> {
         return TodoCategory.fromJson(data, id: doc.id);
       }).toList();
 
-      state = state.copyWith(todos: state.todos, categories: data);
+      state = state.copyWith(
+        todos: state.todos,
+        categories: data,
+        loadingCategories: false,
+        loadingTodos: state.loadingTodos,
+      );
 
       return data;
     } on FirebaseException catch (_) {

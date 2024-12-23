@@ -3,10 +3,15 @@ import 'package:todo_app/models/todo_model.dart';
 class TodoData {
   List<TodoModel> todos = [];
   List<TodoCategory> categories = [];
-  bool loadingTodos = false;
-  bool loadingCategories = false;
+  bool loadingTodos = true;
+  bool loadingCategories = true;
 
-  TodoData({required this.todos, required this.categories});
+  TodoData({
+    required this.todos,
+    required this.categories,
+    this.loadingTodos = true,
+    this.loadingCategories = true,
+  });
 
   TodoData.fromJson(Map<String, dynamic> json) {
     if (json['todos'] != null) {
@@ -39,6 +44,8 @@ class TodoData {
     return TodoData(
       todos: todos ?? this.todos,
       categories: categories ?? this.categories,
+      loadingTodos: loadingTodos ?? this.loadingTodos,
+      loadingCategories: loadingCategories ?? this.loadingCategories,
     );
   }
 

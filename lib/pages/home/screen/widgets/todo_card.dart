@@ -32,8 +32,9 @@ String formatDate(String? date) {
 
 class TodoCard extends ConsumerStatefulWidget {
   final TodoModel todo;
+  final bool isSkeleton;
 
-  const TodoCard({super.key, required this.todo});
+  const TodoCard({super.key, required this.todo, this.isSkeleton = false});
 
   @override
   ConsumerState<TodoCard> createState() => _TodoCardState();
@@ -44,122 +45,213 @@ class _TodoCardState extends ConsumerState<TodoCard> {
   Widget build(BuildContext context) {
     final todoService = ref.read(todoServiceProvider.notifier);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF363636),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          // Check box
-          GestureDetector(
-            onTap: () async {
-              await todoService.toggleTodoDone(widget.todo.id);
-            },
-            child: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: widget.todo.isDone ? Constants.primaryColor : Colors.transparent,
-                borderRadius: BorderRadius.circular(59),
-                border: Border.all(color: Constants.primaryColor),
-              ),
-              child: widget.todo.isDone
-                  ? const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 16,
-                    )
-                  : null,
+    return !widget.isSkeleton
+        ? Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF363636),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  widget.todo.title,
-                  style: GoogleFonts.lato(
-                    color: const Color.fromRGBO(255, 255, 255, 0.87),
-                    fontSize: 16,
+                // Check box
+                GestureDetector(
+                  onTap: () async {
+                    await todoService.toggleTodoDone(widget.todo.id);
+                  },
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: widget.todo.isDone ? Constants.primaryColor : Colors.transparent,
+                      borderRadius: BorderRadius.circular(59),
+                      border: Border.all(color: Constants.primaryColor),
+                    ),
+                    child: widget.todo.isDone
+                        ? const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                        : null,
                   ),
                 ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      formatDate(widget.todo.createdAt),
-                      style: GoogleFonts.lato(
-                        color: const Color(0xFFAFAFAF),
-                        fontSize: 14,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.todo.title,
+                        style: GoogleFonts.lato(
+                          color: const Color.fromRGBO(255, 255, 255, 0.87),
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: widget.todo.category?.color?.toColor() ?? Constants.primaryColor,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Row(children: [
-                            Icon(
-                              IconData(widget.todo.category?.icon ?? 0,
-                                  fontFamily: 'MaterialIcons'),
-                              color: Colors.white,
-                              size: 12,
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            formatDate(widget.todo.createdAt),
+                            style: GoogleFonts.lato(
+                              color: const Color(0xFFAFAFAF),
+                              fontSize: 14,
                             ),
-                            const SizedBox(width: 5),
-                            Text(widget.todo.category?.name ?? "",
-                                style: GoogleFonts.lato(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                )),
-                          ]),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF363636),
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: Constants.primaryColor),
-                          ),
-                          child: Row(children: [
-                            const Icon(
-                              Icons.flag,
-                              color: Colors.white,
-                              size: 12,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              widget.todo.priority.toString(),
-                              style: GoogleFonts.lato(
-                                color: Colors.white,
-                                fontSize: 12,
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: widget.todo.category?.color?.toColor() ??
+                                      Constants.primaryColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Row(children: [
+                                  Icon(
+                                    IconData(widget.todo.category?.icon ?? 0,
+                                        fontFamily: 'MaterialIcons'),
+                                    color: Colors.white,
+                                    size: 12,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(widget.todo.category?.name ?? "",
+                                      style: GoogleFonts.lato(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      )),
+                                ]),
                               ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
+                              const SizedBox(width: 10),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF363636),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: Constants.primaryColor),
+                                ),
+                                child: Row(children: [
+                                  const Icon(
+                                    Icons.flag,
+                                    color: Colors.white,
+                                    size: 12,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    widget.todo.priority.toString(),
+                                    style: GoogleFonts.lato(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF363636),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                // Check box
+                const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 16,
+                        color: const Color(0xFF363636),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 16,
+                            color: const Color(0xFF363636),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF363636),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Row(children: [
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    color: const Color(0xFF363636),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                    width: 50,
+                                    height: 12,
+                                    color: const Color(0xFF363636),
+                                  ),
+                                ]),
+                              ),
+                              const SizedBox(width: 10),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                child: Row(children: [
+                                  const Icon(
+                                    Icons.flag,
+                                    color: Colors.white,
+                                    size: 12,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                    width: 20,
+                                    height: 12,
+                                    color: const Color(0xFF363636),
+                                  ),
+                                ]),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
