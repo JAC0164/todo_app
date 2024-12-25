@@ -22,9 +22,10 @@ class AddTodo extends ConsumerStatefulWidget {
 class _AddTodoState extends ConsumerState<AddTodo> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime? _selectedDate;
+  DateTime _selectedDate = DateTime.now();
   int _selectedFlag = 1;
   TodoCategory? _selectedCategory;
+  final _formKey = GlobalKey<FormState>();
 
   void _onSelectedCategory(TodoCategory value) {
     setState(() {
@@ -45,102 +46,128 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final todoData = ref.read(todoServiceProvider);
+
+    if (todoData.categories.isNotEmpty) _selectedCategory = todoData.categories.first;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authServiceProvider);
     final todoService = ref.read(todoServiceProvider.notifier);
 
-    return Center(
-      child: Material(
-        color: Colors.transparent,
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Container(
-            height: 276,
-            width: MediaQuery.of(context).size.width * 0.92,
-            padding: const EdgeInsets.all(Constants.appPaddingX),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-              color: Constants.bgModel,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Add Task",
-                  style: GoogleFonts.lato(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: const Color.fromRGBO(255, 255, 255, 0.87),
+    return Form(
+      key: _formKey,
+      child: Center(
+        child: Material(
+          color: Colors.transparent,
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Container(
+              height: 300,
+              width: MediaQuery.of(context).size.width * 0.92,
+              padding: const EdgeInsets.all(Constants.appPaddingX),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                color: Constants.bgModel,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Add Task",
+                    style: GoogleFonts.lato(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: const Color.fromRGBO(255, 255, 255, 0.87),
+                    ),
                   ),
-                ),
-                CustomTextField(
-                  label: "",
-                  controller: _titleController,
-                  hintText: "Title",
-                  validator: (value) => null,
-                ),
-                const SizedBox(height: 5),
-                CustomTextField(
-                  label: "",
-                  controller: _descriptionController,
-                  hintText: "Description",
-                  validator: (value) => null,
-                  maxLines: 2,
-                  minLines: 2,
-                  type: TextInputType.multiline,
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            _showDateTimePicker(context);
-                          },
-                          icon: const Icon(Icons.alarm, color: Color.fromRGBO(255, 255, 255, 0.87)),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _showCategoryDialog(context);
-                          },
-                          icon: const Icon(Icons.label, color: Color.fromRGBO(255, 255, 255, 0.87)),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _showFlagDialog(context);
-                          },
-                          icon: const Icon(Icons.flag, color: Color.fromRGBO(255, 255, 255, 0.87)),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        final todo = TodoModel.fromJson(
-                          {
-                            "title": _titleController.text,
-                            "description": _descriptionController.text,
-                            "date": _selectedDate?.toIso8601String(),
-                            "category": _selectedCategory?.toJson(),
-                            "priority": _selectedFlag,
-                            "userId": authState.user!.uid,
-                            "createdAt": DateTime.now().toIso8601String(),
-                            "updatedAt": DateTime.now().toIso8601String(),
-                          },
-                        );
+                  CustomTextField(
+                    label: "",
+                    controller: _titleController,
+                    hintText: "Title",
+                    validator: (value) => value!.isEmpty ? "Title is required" : null,
+                  ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    label: "",
+                    controller: _descriptionController,
+                    hintText: "Description",
+                    validator: (value) => null,
+                    maxLines: 2,
+                    minLines: 2,
+                    type: TextInputType.multiline,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _showDateTimePicker(context);
+                            },
+                            icon:
+                                const Icon(Icons.alarm, color: Color.fromRGBO(255, 255, 255, 0.87)),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _showCategoryDialog(context);
+                            },
+                            icon:
+                                const Icon(Icons.label, color: Color.fromRGBO(255, 255, 255, 0.87)),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _showFlagDialog(context);
+                            },
+                            icon:
+                                const Icon(Icons.flag, color: Color.fromRGBO(255, 255, 255, 0.87)),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) return;
 
-                        await todoService.addTodo(todo);
+                          if (_selectedCategory == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Please select a category"),
+                              ),
+                            );
+                            return;
+                          }
 
-                        if (context.mounted) Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.send, color: Color.fromRGBO(255, 255, 255, 0.87)),
-                    ),
-                  ],
-                )
-              ],
+                          final todo = TodoModel.fromJson(
+                            {
+                              "title": _titleController.text,
+                              "description": _descriptionController.text,
+                              "date": _selectedDate.toIso8601String(),
+                              "category": _selectedCategory?.toJson(),
+                              "priority": _selectedFlag,
+                              "userId": authState.user!.uid,
+                              "createdAt": DateTime.now().toIso8601String(),
+                              "updatedAt": DateTime.now().toIso8601String(),
+                            },
+                          );
+
+                          await todoService.addTodo(todo);
+
+                          if (context.mounted) Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.send, color: Color.fromRGBO(255, 255, 255, 0.87)),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
