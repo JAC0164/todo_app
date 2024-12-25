@@ -73,8 +73,8 @@ class _AddCategoryState extends ConsumerState<AddCategory> {
                               return "Category name must be at least 3 characters";
                             }
 
-                            if (value.length > 25) {
-                              return "Category name must be less than 25 characters";
+                            if (value.length > 10) {
+                              return "Category name must be less than 10 characters";
                             }
 
                             return null;
