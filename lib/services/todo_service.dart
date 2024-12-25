@@ -77,16 +77,29 @@ class TodoService extends StateNotifier<TodoData> {
 
   // Delete todo
   Future<String?> deleteTodo(String id) async {
-    try {
-      await _firestore.collection('todos').doc(id).delete();
+    final todos = state.todos.map((e) => e).toList();
 
+    try {
       state = state.copyWith(
         todos: state.todos.where((e) => e.id != id).toList(),
         categories: state.categories,
       );
 
+      await _firestore.collection('todos').doc(id).delete();
+
       return id;
     } on FirebaseException catch (_) {
+      state = state.copyWith(
+        todos: todos,
+        categories: state.categories,
+      );
+      return null;
+    } catch (_) {
+      state = state.copyWith(
+        todos: todos,
+        categories: state.categories,
+      );
+
       return null;
     }
   }

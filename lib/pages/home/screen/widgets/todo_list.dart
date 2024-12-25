@@ -24,10 +24,9 @@ class TodoList extends StatelessWidget {
       final isSearchMatch = todo.title.toLowerCase().contains(search.toLowerCase()) ||
           (todo.description ?? '').toLowerCase().contains(search.toLowerCase());
 
-      final createdAt = DateTime.parse(todo.createdAt ?? "");
+      final date = DateTime.parse(todo.date ?? "");
       final now = DateTime.now();
-      final isToday =
-          createdAt.day == now.day && createdAt.month == now.month && createdAt.year == now.year;
+      final isToday = date.day == now.day && date.month == now.month && date.year == now.year;
       final isStatusFilter = filters.contains("active") || filters.contains("completed");
       final isTodayFilter = filters.contains("today");
 

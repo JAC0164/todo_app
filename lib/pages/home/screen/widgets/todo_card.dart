@@ -208,7 +208,7 @@ class _ItemState extends ConsumerState<Item> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      formatDate(widget.todo.createdAt),
+                      formatDate(widget.todo.date),
                       style: GoogleFonts.lato(
                         color: const Color(0xFFAFAFAF),
                         fontSize: 14,
