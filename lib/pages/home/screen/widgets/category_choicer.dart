@@ -146,23 +146,20 @@ class _CategoryChoicerState extends ConsumerState<CategoryChoicer> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: Opacity(
-                      opacity: _selectedCategory == null ? 0.5 : 1,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showAddCategory(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          backgroundColor: Constants.primaryColor,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _showAddCategory(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(
-                          "Add Category",
-                          style: GoogleFonts.lato(color: Colors.white),
-                        ),
+                        backgroundColor: Constants.primaryColor,
+                      ),
+                      child: Text(
+                        "Add Category",
+                        style: GoogleFonts.lato(color: Colors.white),
                       ),
                     ),
                   ),

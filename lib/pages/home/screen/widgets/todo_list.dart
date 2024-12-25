@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/pages/home/screen/widgets/todo_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:todo_app/pages/home/screen/widgets/todo_details.dart';
 
 class TodoList extends StatelessWidget {
   final List<TodoModel> todos;
@@ -59,11 +60,25 @@ class TodoList extends StatelessWidget {
         itemBuilder: (context, index) {
           final TodoModel todo = loading ? TodoModel(id: "", title: "") : filteredTodos[index];
 
-          return TodoCard(
-            todo: todo,
-            isSkeleton: loading,
+          return GestureDetector(
+            onTap: () {
+              if (!loading) _showTodoDetails(todo, context);
+            },
+            child: TodoCard(
+              todo: todo,
+              isSkeleton: loading,
+            ),
           );
         },
+      ),
+    );
+  }
+
+  void _showTodoDetails(TodoModel todo, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => TodoDetails(
+        todo: todo,
       ),
     );
   }
