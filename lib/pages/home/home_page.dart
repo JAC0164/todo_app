@@ -31,7 +31,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     return [
       TodoScreen(
         todos: data.todos,
-        loading: data.loadingTodos, //  data.loadingTodos
+        loading: data.loadingTodos,
       ),
       const Center(child: Text('Search Page', style: TextStyle(fontSize: 24))),
       const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),

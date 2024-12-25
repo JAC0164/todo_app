@@ -15,6 +15,10 @@ class TodoService extends StateNotifier<TodoData> {
   // Get all todos
   Future<List<TodoModel>?> getTodos(String userId) async {
     try {
+      state = state.copyWith(
+        loadingTodos: true,
+      );
+
       final QuerySnapshot querySnapshot =
           await _firestore.collection('todos').where('userId', isEqualTo: userId).get();
 
@@ -139,6 +143,10 @@ class TodoService extends StateNotifier<TodoData> {
   // Get all categories
   Future<List<TodoCategory>?> getCategories(String userId) async {
     try {
+      state = state.copyWith(
+        loadingCategories: true,
+      );
+
       final QuerySnapshot querySnapshot =
           await _firestore.collection('categories').where('userId', isEqualTo: userId).get();
       final QuerySnapshot querySnapshotPublic =

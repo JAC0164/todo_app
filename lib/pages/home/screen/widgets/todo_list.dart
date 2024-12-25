@@ -48,6 +48,11 @@ class TodoList extends StatelessWidget {
     }).toList();
 
     return Skeletonizer(
+      effect: ShimmerEffect(
+        baseColor: Colors.grey[600]!,
+        highlightColor: Colors.grey[400]!,
+        duration: const Duration(seconds: 1),
+      ),
       enabled: loading,
       child: ListView.builder(
         itemCount: loading ? 10 : filteredTodos.length,

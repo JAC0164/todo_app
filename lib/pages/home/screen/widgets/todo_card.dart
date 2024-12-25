@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,6 +32,254 @@ String formatDate(String? date) {
   }
 }
 
+class ItemPlaceholder extends StatefulWidget {
+  const ItemPlaceholder({super.key});
+
+  @override
+  State<ItemPlaceholder> createState() => _ItemPlaceholderState();
+}
+
+class _ItemPlaceholderState extends State<ItemPlaceholder> {
+  final randNumb = Random().nextInt(20) + 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF363636),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          // Check box
+          const Icon(
+            Icons.check,
+            color: Colors.white,
+            size: 20,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // randtext
+                Text(
+                  'Business meeting with CEO' + List.filled(randNumb, '.').join(''),
+                  style: GoogleFonts.lato(
+                    color: const Color(0xFFAFAFAF),
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Today At 16:45',
+                      style: GoogleFonts.lato(
+                        color: const Color(0xFFAFAFAF),
+                        fontSize: 14,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[800],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(children: [
+                            const Icon(
+                              IconData(0, fontFamily: 'MaterialIcons'),
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5),
+                            Text("University",
+                                style: GoogleFonts.lato(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                )),
+                          ]),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF363636),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.grey[800]!),
+                          ),
+                          child: Row(children: [
+                            const Icon(
+                              Icons.flag,
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              "1",
+                              style: GoogleFonts.lato(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Item extends ConsumerStatefulWidget {
+  final TodoModel todo;
+
+  const Item({super.key, required this.todo});
+
+  @override
+  ConsumerState<Item> createState() => _ItemState();
+}
+
+class _ItemState extends ConsumerState<Item> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF363636),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          // Check box
+          GestureDetector(
+            onTap: () async {
+              await ref.read(todoServiceProvider.notifier).toggleTodoDone(widget.todo.id);
+            },
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: widget.todo.isDone ? Constants.primaryColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(59),
+                border: Border.all(color: Constants.primaryColor),
+              ),
+              child: widget.todo.isDone
+                  ? const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.todo.title,
+                  style: GoogleFonts.lato(
+                    color: const Color.fromRGBO(255, 255, 255, 0.87),
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formatDate(widget.todo.createdAt),
+                      style: GoogleFonts.lato(
+                        color: const Color(0xFFAFAFAF),
+                        fontSize: 14,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: widget.todo.category?.color?.toColor() ?? Constants.primaryColor,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(children: [
+                            Icon(
+                              IconData(widget.todo.category?.icon ?? 0,
+                                  fontFamily: 'MaterialIcons'),
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(widget.todo.category?.name ?? "",
+                                style: GoogleFonts.lato(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                )),
+                          ]),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF363636),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Constants.primaryColor),
+                          ),
+                          child: Row(children: [
+                            const Icon(
+                              Icons.flag,
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              widget.todo.priority.toString(),
+                              style: GoogleFonts.lato(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class TodoCard extends ConsumerStatefulWidget {
   final TodoModel todo;
   final bool isSkeleton;
@@ -43,215 +293,6 @@ class TodoCard extends ConsumerStatefulWidget {
 class _TodoCardState extends ConsumerState<TodoCard> {
   @override
   Widget build(BuildContext context) {
-    final todoService = ref.read(todoServiceProvider.notifier);
-
-    return !widget.isSkeleton
-        ? Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF363636),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                // Check box
-                GestureDetector(
-                  onTap: () async {
-                    await todoService.toggleTodoDone(widget.todo.id);
-                  },
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: widget.todo.isDone ? Constants.primaryColor : Colors.transparent,
-                      borderRadius: BorderRadius.circular(59),
-                      border: Border.all(color: Constants.primaryColor),
-                    ),
-                    child: widget.todo.isDone
-                        ? const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 16,
-                          )
-                        : null,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.todo.title,
-                        style: GoogleFonts.lato(
-                          color: const Color.fromRGBO(255, 255, 255, 0.87),
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            formatDate(widget.todo.createdAt),
-                            style: GoogleFonts.lato(
-                              color: const Color(0xFFAFAFAF),
-                              fontSize: 14,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: widget.todo.category?.color?.toColor() ??
-                                      Constants.primaryColor,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Row(children: [
-                                  Icon(
-                                    IconData(widget.todo.category?.icon ?? 0,
-                                        fontFamily: 'MaterialIcons'),
-                                    color: Colors.white,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(widget.todo.category?.name ?? "",
-                                      style: GoogleFonts.lato(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      )),
-                                ]),
-                              ),
-                              const SizedBox(width: 10),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF363636),
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: Constants.primaryColor),
-                                ),
-                                child: Row(children: [
-                                  const Icon(
-                                    Icons.flag,
-                                    color: Colors.white,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    widget.todo.priority.toString(),
-                                    style: GoogleFonts.lato(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ]),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        : Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF363636),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                // Check box
-                const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 16,
-                        color: const Color(0xFF363636),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 16,
-                            color: const Color(0xFF363636),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF363636),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Row(children: [
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    color: const Color(0xFF363636),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Container(
-                                    width: 50,
-                                    height: 12,
-                                    color: const Color(0xFF363636),
-                                  ),
-                                ]),
-                              ),
-                              const SizedBox(width: 10),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                child: Row(children: [
-                                  const Icon(
-                                    Icons.flag,
-                                    color: Colors.white,
-                                    size: 12,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Container(
-                                    width: 20,
-                                    height: 12,
-                                    color: const Color(0xFF363636),
-                                  ),
-                                ]),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
+    return !widget.isSkeleton ? Item(todo: widget.todo) : const ItemPlaceholder();
   }
 }
