@@ -238,7 +238,7 @@ class _TodoDetailsState extends ConsumerState<TodoDetails> {
               GestureDetector(
                 onTap: () async {
                   await ref.read(todoServiceProvider.notifier).deleteTodo(todo.id);
-                  Navigator.pop(context);
+                  if (context.mounted) Navigator.pop(context);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

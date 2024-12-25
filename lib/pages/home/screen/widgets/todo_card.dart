@@ -64,9 +64,8 @@ class _ItemPlaceholderState extends State<ItemPlaceholder> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // randtext
                 Text(
-                  'Business meeting with CEO' + List.filled(randNumb, '.').join(''),
+                  'Business meeting with CEO${List.filled(randNumb, '.').join('')}',
                   style: GoogleFonts.lato(
                     color: const Color(0xFFAFAFAF),
                     fontSize: 16,
