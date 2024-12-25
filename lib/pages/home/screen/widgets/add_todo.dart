@@ -51,7 +51,9 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
     final todoData = ref.read(todoServiceProvider);
 
-    if (todoData.categories.isNotEmpty) _selectedCategory = todoData.categories.first;
+    if (todoData.categories.isNotEmpty && _selectedCategory == null) {
+      _selectedCategory = todoData.categories.first;
+    }
   }
 
   @override
@@ -91,7 +93,21 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                     label: "",
                     controller: _titleController,
                     hintText: "Title",
-                    validator: (value) => value!.isEmpty ? "Title is required" : null,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Title cannot be empty";
+                      }
+
+                      if (value.length < 3) {
+                        return "Title must be at least 3 characters";
+                      }
+
+                      if (value.length > 50) {
+                        return "Title must be less than 50 characters";
+                      }
+
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 5),
                   CustomTextField(
