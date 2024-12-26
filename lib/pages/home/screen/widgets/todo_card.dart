@@ -226,7 +226,7 @@ class _ItemState extends ConsumerState<Item> {
                           ),
                           child: Row(children: [
                             Icon(
-                              IconData(widget.todo.category?.icon ?? 0,
+                              IconData(widget.todo.category?.icon ?? 58172,
                                   fontFamily: 'MaterialIcons'),
                               color: Colors.white,
                               size: 12,

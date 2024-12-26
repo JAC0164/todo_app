@@ -231,7 +231,7 @@ class _TodoDetailsState extends ConsumerState<TodoDetails> {
                 titleIcon: Icons.label_outline,
                 dataTile: todo.category?.name ?? "",
                 dataIcon: IconData(
-                  todo.category?.icon ?? 0xe900,
+                  todo.category?.icon ?? 58172,
                   fontFamily: 'MaterialIcons',
                 ),
                 dataIconColor: todo.category?.color,

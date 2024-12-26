@@ -102,7 +102,7 @@ class _CustomIconButtonPickerState extends State<CustomIconButtonPicker> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Icon(
-                        IconData(_selectedIcon!, fontFamily: 'MaterialIcons'),
+                        IconData(_selectedIcon ?? 58172, fontFamily: 'MaterialIcons'),
                         color: Colors.white,
                       ),
                     ),

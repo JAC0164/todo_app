@@ -119,7 +119,7 @@ class _CategoryChoicerState extends ConsumerState<CategoryChoicer> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        IconData(category.icon ?? 0, fontFamily: 'MaterialIcons'),
+                                        IconData(category.icon ?? 58172, fontFamily: 'MaterialIcons'),
                                         color: Colors.white,
                                       ),
                                     ],
