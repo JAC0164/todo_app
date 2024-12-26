@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/pages/home/screen/widgets/todo_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -23,6 +24,28 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filteredTodos = todos.where(_todoFilter).toList();
+
+    if (filteredTodos.isEmpty && !loading) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.checklist_rtl,
+              size: 100,
+              color: Color.fromRGBO(255, 255, 255, .87),
+            ),
+            Text(
+              "No tasks found!",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                color: const Color.fromRGBO(255, 255, 255, .87),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Skeletonizer(
       effect: ShimmerEffect(

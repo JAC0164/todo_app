@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/libs/constants.dart';
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/pages/home/screen/widgets/filter_chips.dart';
@@ -34,6 +35,33 @@ class _TodoScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.todos.isEmpty && !widget.loading) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset("assets/images/checklist_rafiki.png"),
+            const SizedBox(height: 10),
+            Text(
+              "What do you want to do today?",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                color: const Color.fromRGBO(255, 255, 255, .87),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Tap + to add your tasks",
+              style: GoogleFonts.lato(
+                fontSize: 18,
+                color: const Color.fromRGBO(255, 255, 255, .87),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Constants.appPaddingX),
       child: Column(
