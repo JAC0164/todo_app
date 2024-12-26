@@ -5,6 +5,7 @@ import 'package:todo_app/libs/constants.dart';
 import 'package:todo_app/models/todo_data.dart';
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/pages/home/screen/calendar_screen.dart';
+import 'package:todo_app/pages/home/screen/focus_screen.dart';
 import 'package:todo_app/pages/home/screen/todo_screen.dart';
 import 'package:todo_app/pages/home/screen/widgets/add_todo.dart';
 import 'package:todo_app/pages/home/widgets/avatar_widget.dart';
@@ -38,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         todos: data.todos,
         loading: data.loadingTodos,
       ),
-      const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
+      const FocusScreen(),
       const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
     ];
   }
