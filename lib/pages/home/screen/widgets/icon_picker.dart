@@ -14,6 +14,8 @@ class IconPicker extends StatefulWidget {
     Icons.settings,
     Icons.search,
     Icons.person,
+    Icons.work,
+    Icons.music_video,
     Icons.phone,
     Icons.email,
     Icons.calendar_today,
