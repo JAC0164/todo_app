@@ -163,7 +163,7 @@ class TodoService extends StateNotifier<TodoData> {
       final QuerySnapshot querySnapshot =
           await _firestore.collection('categories').where('userId', isEqualTo: userId).get();
       final QuerySnapshot querySnapshotPublic =
-          await _firestore.collection('todos').where('userId', isEqualTo: "public").get();
+          await _firestore.collection('categories').where('userId', isEqualTo: "public").get();
 
       final allResults = [...querySnapshot.docs, ...querySnapshotPublic.docs];
 
