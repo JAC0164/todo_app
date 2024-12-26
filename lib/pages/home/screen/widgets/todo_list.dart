@@ -9,6 +9,7 @@ class TodoList extends StatelessWidget {
   final bool loading;
   final String search;
   final List<String> filters;
+  final DateTime? filterDate;
 
   const TodoList({
     super.key,
@@ -16,36 +17,12 @@ class TodoList extends StatelessWidget {
     required this.search,
     required this.filters,
     required this.loading,
+    this.filterDate,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filteredTodos = todos.where((todo) {
-      final isSearchMatch = todo.title.toLowerCase().contains(search.toLowerCase()) ||
-          (todo.description ?? '').toLowerCase().contains(search.toLowerCase());
-
-      final date = DateTime.parse(todo.date ?? "");
-      final now = DateTime.now();
-      final isToday = date.day == now.day && date.month == now.month && date.year == now.year;
-      final isStatusFilter = filters.contains("active") || filters.contains("completed");
-      final isTodayFilter = filters.contains("today");
-
-      if (isStatusFilter && isTodayFilter) {
-        return isSearchMatch && isToday && filters.contains("completed")
-            ? todo.isDone
-            : !todo.isDone;
-      }
-
-      if (isStatusFilter) {
-        return isSearchMatch && filters.contains("completed") ? todo.isDone : !todo.isDone;
-      }
-
-      if (isTodayFilter) {
-        return isSearchMatch && isToday;
-      }
-
-      return isSearchMatch;
-    }).toList();
+    final filteredTodos = todos.where(_todoFilter).toList();
 
     return Skeletonizer(
       effect: ShimmerEffect(
@@ -80,5 +57,32 @@ class TodoList extends StatelessWidget {
         todo: todo,
       ),
     );
+  }
+
+  bool _todoFilter(TodoModel todo) {
+    final isSearchMatch = todo.title.toLowerCase().contains(search.toLowerCase()) ||
+        (todo.description ?? '').toLowerCase().contains(search.toLowerCase());
+
+    final date = DateTime.parse(todo.date ?? "");
+    final now = filterDate ?? DateTime.now();
+    final isToday = date.day == now.day && date.month == now.month && date.year == now.year;
+    final isStatusFilter = filters.contains("active") || filters.contains("completed");
+    final isTodayFilter = filters.contains("today") || filterDate != null;
+
+    if (isStatusFilter && isTodayFilter) {
+      if (filters.contains("completed")) {
+        return isSearchMatch && todo.isDone && isToday;
+      } else {
+        return isSearchMatch && !todo.isDone && isToday;
+      }
+    }
+
+    if (isStatusFilter) {
+      return isSearchMatch && filters.contains("completed") ? todo.isDone : !todo.isDone;
+    }
+
+    if (isTodayFilter) return isSearchMatch && isToday;
+
+    return isSearchMatch;
   }
 }

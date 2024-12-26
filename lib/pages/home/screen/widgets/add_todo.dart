@@ -10,10 +10,15 @@ import 'package:todo_app/services/auth_service.dart';
 import 'package:todo_app/services/todo_service.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
 
+// mode edition
+enum Mode { add, edit }
+
 class AddTodo extends ConsumerStatefulWidget {
   final List<TodoCategory> categories;
+  final Mode mode;
+  final TodoModel? todo;
 
-  const AddTodo({super.key, required this.categories});
+  const AddTodo({super.key, required this.categories, this.mode = Mode.add, this.todo});
 
   @override
   ConsumerState<AddTodo> createState() => _AddTodoState();
@@ -53,6 +58,21 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
     if (todoData.categories.isNotEmpty && _selectedCategory == null) {
       _selectedCategory = todoData.categories.first;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    print(widget.todo?.category);
+
+    if (widget.mode == Mode.edit) {
+      _titleController.text = widget.todo!.title;
+      _descriptionController.text = widget.todo!.description ?? "";
+      _selectedDate = DateTime.parse(widget.todo!.date ?? "");
+      _selectedFlag = widget.todo!.priority ?? 1;
+      _selectedCategory = widget.todo!.category;
     }
   }
 
@@ -172,9 +192,14 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                               "createdAt": DateTime.now().toIso8601String(),
                               "updatedAt": DateTime.now().toIso8601String(),
                             },
+                            id: widget.todo?.id,
                           );
 
-                          await todoService.addTodo(todo);
+                          if (widget.mode == Mode.edit) {
+                            await todoService.updateTodo(todo);
+                          } else {
+                            await todoService.addTodo(todo);
+                          }
 
                           if (context.mounted) Navigator.of(context).pop();
                         },

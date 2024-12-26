@@ -46,6 +46,7 @@ class _DateTimeChoicerState extends State<DateTimeChoicer> {
                     selectionMode: DateRangePickerSelectionMode.single,
                     backgroundColor: Constants.bgModel,
                     initialSelectedDate: _selectedDate,
+                    initialDisplayDate: _selectedDate,
                     onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                       final value = args.value;
 

@@ -18,7 +18,7 @@ class TodoCategory {
   });
 
   TodoCategory.fromJson(Map<String, dynamic> json, {String? id}) {
-    this.id = id ?? '';
+    this.id = id ?? json['id'] ?? '';
     name = json['name'] ?? 'Untitled';
     icon = json['icon'] ?? '';
     useId = json['userId'] ?? '';
@@ -71,7 +71,7 @@ class TodoModel {
   });
 
   TodoModel.fromJson(Map<String, dynamic> json, {String? id}) {
-    this.id = id ?? '';
+    this.id = id ?? json["id"] ?? '';
     title = json['title'] ?? 'Untitled';
     description = json['description'];
     userId = json['userId'];

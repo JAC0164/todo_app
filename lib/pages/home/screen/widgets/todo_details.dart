@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/libs/constants.dart';
 import 'package:todo_app/libs/extensions.dart';
 import 'package:todo_app/models/todo_model.dart';
+import 'package:todo_app/pages/home/screen/widgets/add_todo.dart';
 import 'package:todo_app/pages/home/screen/widgets/todo_card.dart';
 import 'package:todo_app/services/todo_service.dart';
 import 'package:collection/collection.dart';
@@ -14,6 +15,7 @@ class Details extends StatefulWidget {
   final String dataTile;
   final IconData? dataIcon;
   final String? dataIconColor;
+  final Function? onTap;
 
   const Details({
     super.key,
@@ -22,6 +24,7 @@ class Details extends StatefulWidget {
     required this.dataTile,
     this.dataIcon,
     this.dataIconColor,
+    this.onTap,
   });
 
   @override
@@ -51,31 +54,34 @@ class _DetailsState extends State<Details> {
             ),
           ],
         ),
-        Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              children: [
-                if (widget.dataIcon != null) ...[
-                  Icon(
-                    widget.dataIcon,
-                    color: widget.dataIconColor?.toColor(),
-                    size: 16,
+        GestureDetector(
+          onTap: widget.onTap as void Function()?,
+          child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF444444),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                children: [
+                  if (widget.dataIcon != null) ...[
+                    Icon(
+                      widget.dataIcon,
+                      color: widget.dataIconColor?.toColor(),
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    widget.dataTile,
+                    style: GoogleFonts.lato(
+                      color: const Color.fromRGBO(255, 255, 255, .87),
+                      fontSize: 12,
+                    ),
                   ),
-                  const SizedBox(width: 8),
                 ],
-                Text(
-                  widget.dataTile,
-                  style: GoogleFonts.lato(
-                    color: const Color.fromRGBO(255, 255, 255, .87),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ))
+              )),
+        )
       ],
     );
   }
@@ -202,7 +208,9 @@ class _TodoDetailsState extends ConsumerState<TodoDetails> {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showEditTodoModal(context, todo, todoData.categories);
+                    },
                     icon: const Icon(
                       Icons.edit_square,
                       color: Color(0xFFAFAFAF),
@@ -268,6 +276,19 @@ class _TodoDetailsState extends ConsumerState<TodoDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showEditTodoModal(BuildContext context, TodoModel todo, List<TodoCategory> categories) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AddTodo(
+          mode: Mode.edit,
+          todo: todo,
+          categories: categories,
+        );
+      },
     );
   }
 }

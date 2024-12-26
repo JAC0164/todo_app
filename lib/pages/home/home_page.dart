@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/libs/constants.dart';
 import 'package:todo_app/models/todo_data.dart';
 import 'package:todo_app/models/todo_model.dart';
+import 'package:todo_app/pages/home/screen/calendar_screen.dart';
 import 'package:todo_app/pages/home/screen/todo_screen.dart';
 import 'package:todo_app/pages/home/screen/widgets/add_todo.dart';
 import 'package:todo_app/pages/home/widgets/avatar_widget.dart';
@@ -33,11 +34,16 @@ class _HomePageState extends ConsumerState<HomePage> {
         todos: data.todos,
         loading: data.loadingTodos,
       ),
-      const Center(child: Text('Search Page', style: TextStyle(fontSize: 24))),
+      CalendarScreen(
+        todos: data.todos,
+        loading: data.loadingTodos,
+      ),
       const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
       const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
     ];
   }
+
+  List<String> titleScreens = ['Index', 'Calendar', 'Profile', 'Profile'];
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +59,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         actions: [
           AvatarWidget(photoURL: authState.user!.photoURL),
         ],
-        title: const Text('Index'),
+        title: Text(
+          titleScreens[_selectedIndex],
+          style: GoogleFonts.lato(
+            color: const Color.fromRGBO(255, 255, 255, .87),
+            fontSize: 20,
+          ),
+        ),
         centerTitle: true,
         titleTextStyle: GoogleFonts.lato(
           color: const Color.fromRGBO(255, 255, 255, .87),
