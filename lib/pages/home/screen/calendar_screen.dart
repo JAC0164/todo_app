@@ -72,6 +72,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             activeDayColor: Colors.white,
             dayColor: Colors.white,
             monthColor: Colors.white,
+            fontSize: 12,
+            height: 56,
+            width: 40,
+            eventDates: widget.todos.map((e) => DateTime.parse(e.date ?? "")).toList(),
           ),
           const SizedBox(height: 20),
           Container(
